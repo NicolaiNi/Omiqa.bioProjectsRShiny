@@ -56,6 +56,7 @@ shinyServer(function(input, output, session) {
     })
     
     onclick("buttonTest", {
-        js$changeSizeNetwork(1000)
+        #js$changeSizeNetwork()
+        js$loadPanZoom()
     })
 }) 

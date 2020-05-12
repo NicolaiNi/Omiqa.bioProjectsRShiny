@@ -44,6 +44,16 @@ jsCodeD3 <- "
         console.log(svg_network_image);
 }
 "
+# https://github.com/anvaka/panzoom
+jsPanZoom <- "
+    shinyjs.loadPanZoom = function (){
+        var element = document.querySelector('#svg_network_image')
+        panzoom(element, {
+            bounds: true,
+            boundsPadding: 0
+        })
+}
+"
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -72,6 +82,7 @@ shinyUI(fluidPage(
             uiOutput("dynamic"),
             hr(),
             tags$script(src = "https://d3js.org/d3.v5.min.js"), #so far not needed
+            tags$script(src = "https://unpkg.com/panzoom@9.2.4/dist/panzoom.min.js"),
             useShinyjs(),
             extendShinyjs(text = jsCode),
             tags$head(tags$script(src = "http://string-db.org/javascript/combined_embedded_network_v2.0.2.js")),
@@ -80,7 +91,7 @@ shinyUI(fluidPage(
             tags$div(id = "stringEmbedded"),
             
             
-            extendShinyjs(text = jsCodeD3),
+            extendShinyjs(text = jsPanZoom),
             actionButton("buttonTest", "GO")
         ),
 ))
