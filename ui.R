@@ -45,16 +45,21 @@ jsCodeD3 <- "
 }
 "
 # https://github.com/anvaka/panzoom
+#(shinyjs.loadPanZoom = )
 jsPanZoom <- "
-    shinyjs.loadPanZoom = function (){
+   shinyjs.loadPanZoom = function (){
         var element = document.querySelector('#svg_network_image')
         panzoom(element, {
             bounds: true,
             boundsPadding: 0
-        })
-}
+        });
+        console.log(element)
+  }
 "
 
+##################################
+##############UI##################
+##################################
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
     titlePanel("Omiqa.bio Test Visualization"),
@@ -69,7 +74,11 @@ shinyUI(fluidPage(
         selectInput("gene_select", "Select genes", choices=choices_genes, multiple = TRUE, selected = ""),
         # select Conditions
         selectInput("condition_select", "Select conditions", choices=choices_conditions, multiple = TRUE, selected = ""),
+        checkboxInput("cluster", "Apply clustering"),
         actionButton("apply_selection", "Apply Selection"),
+        checkboxInput("sortGenesDescending", "Sort genes descending", ),
+        checkboxInput("sortbyRowSum", "Sort genes by row sum", ),
+        checkboxInput("sortbyColumnSum", "Sort genes by column sum", ),
         # slider to adopt size of heatmap
         hr(),
         sliderInput("heatmapHeight", "Change height", value = 700, min = 100, max = 2000, step = 50),
@@ -89,9 +98,7 @@ shinyUI(fluidPage(
             actionButton("button", "Show Network for the selected gene(s)"),
             verbatimTextOutput("gene_select"),
             tags$div(id = "stringEmbedded"),
-            
-            
             extendShinyjs(text = jsPanZoom),
-            actionButton("buttonTest", "GO")
+            
         ),
 ))

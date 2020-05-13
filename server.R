@@ -31,6 +31,16 @@ shinyServer(function(input, output, session) {
         }
         #select data 
         dat_select <- subset(dat, rownames(dat) %in% input$gene_select, colnames(dat) %in% input$condition_select)
+        if(input$sortGenesDescending){
+            dat_select <- dat_select[order(rownames(dat_select), decreasing =  TRUE),] 
+        }
+        if(input$sortbyRowSum){
+            dat_select <- dat_select[order(rowSums(dat_select), decreasing =  TRUE),]
+        }
+        if(input$sortbyColumnSum){
+            dat_select <- dat_select[,order(colSums(dat_select), decreasing =  TRUE)]
+        }
+        
         return(dat_select)
     })
     
@@ -38,7 +48,7 @@ shinyServer(function(input, output, session) {
 
                     d3heatmap(dataSelect(),
                             scale = "none",
-                            dendrogram = "none",
+                            dendrogram = if (input$cluster) "both" else "none", 
                             anim_duration = 0,
                             colors = "Blues",
                             cexCol = input$heatmapFontSizeY,
@@ -55,8 +65,7 @@ shinyServer(function(input, output, session) {
         js$loadStringData(genesInputSTRING,website)
     })
     
-    onclick("buttonTest", {
-        #js$changeSizeNetwork()
-        js$loadPanZoom()
+    observeEvent(input$button,{
+        delay(1000, js$loadPanZoom() ) # room for improvement, delay time has to be changed according to loading time, event handler implemenation in js
     })
 }) 
