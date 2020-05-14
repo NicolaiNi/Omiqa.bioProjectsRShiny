@@ -29,16 +29,28 @@ shinyServer(function(input, output, session) {
         if(is.null(input$gene_select) && is.null(input$condition_select)){
             return(dat)
         }
-        #select data 
+        
+        ##SELECT
         dat_select <- subset(dat, rownames(dat) %in% input$gene_select, colnames(dat) %in% input$condition_select)
-        if(input$sortGenesDescending){
+        
+        ##SORT
+        # by Genes
+        if(input$sortByGenes == "desc"){
             dat_select <- dat_select[order(rownames(dat_select), decreasing =  TRUE),] 
         }
-        if(input$sortbyRowSum){
+        if(input$sortByGenes == "asc"){
+            dat_select <- dat_select[order(rownames(dat_select), decreasing =  FALSE),] 
+        }
+        
+        # by Sum
+        if(input$sortBySum == "row"){
             dat_select <- dat_select[order(rowSums(dat_select), decreasing =  TRUE),]
         }
-        if(input$sortbyColumnSum){
+        if(input$sortBySum == "column"){
             dat_select <- dat_select[,order(colSums(dat_select), decreasing =  TRUE)]
+        }
+        if(input$sortBySum == "none"){
+            return(dat_select)
         }
         
         return(dat_select)
@@ -48,7 +60,7 @@ shinyServer(function(input, output, session) {
 
                     d3heatmap(dataSelect(),
                             scale = "none",
-                            dendrogram = if (input$cluster) "both" else "none", 
+                            dendrogram = if (input$dendrogram) "both" else "none", 
                             anim_duration = 0,
                             colors = "Blues",
                             cexCol = input$heatmapFontSizeY,

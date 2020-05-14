@@ -51,9 +51,7 @@ jsPanZoom <- "
         var element = document.querySelector('#svg_network_image')
         panzoom(element, {
             bounds: true,
-            boundsPadding: 0
         });
-        console.log(element)
   }
 "
 
@@ -74,11 +72,10 @@ shinyUI(fluidPage(
         selectInput("gene_select", "Select genes", choices=choices_genes, multiple = TRUE, selected = ""),
         # select Conditions
         selectInput("condition_select", "Select conditions", choices=choices_conditions, multiple = TRUE, selected = ""),
-        checkboxInput("cluster", "Apply clustering"),
-        actionButton("apply_selection", "Apply Selection"),
-        checkboxInput("sortGenesDescending", "Sort genes descending", ),
-        checkboxInput("sortbyRowSum", "Sort genes by row sum", ),
-        checkboxInput("sortbyColumnSum", "Sort genes by column sum", ),
+        checkboxInput("dendrogram", "display dendrogram"),
+        radioButtons("sortByGenes", label = "Sort Genes", choices = c("ascending" = "asc", "descending" = "desc"), inline = TRUE),
+        radioButtons("sortBySum", label = "Sort by Sum", choices = c("none", "row", "column"), inline = TRUE),
+        actionButton("apply_selection", "Apply"),
         # slider to adopt size of heatmap
         hr(),
         sliderInput("heatmapHeight", "Change height", value = 700, min = 100, max = 2000, step = 50),
